@@ -1,14 +1,16 @@
 import React from "react";
 import "./App.css";
-import AspectRatioTest from "./components/AspectRatioTest";
 import BoxTest from "./components/BoxTest";
-import { Box } from '@chakra-ui/react'
-
+import Header from "./components/Layout/Header";
+import Products from "./components/Shop/Products";
+import Footer from "./components/Layout/Footer";
+import ModalCart from "./components/Cart/ModalCart";
 function App() {
   return (
     <React.Fragment>
-      <AspectRatioTest />
-      <BoxTest />
+      <Header />
+      <Products />
+      <Footer />
     </React.Fragment>
   );
 }

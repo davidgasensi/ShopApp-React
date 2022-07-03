@@ -1,94 +1,56 @@
 import { Box, Image, Badge, Center } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
-function BoxTest() {
-  const property = [
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Pruebita",
-      beds: 3,
-      baths: 2,
-      title: "Pruebazoto",
-      formattedPrice: "$5,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    
-    
-  ];
+import {React, useState, useEffect, useCallback} from 'react';
+import loadingIcon from '../assets/eclipse.svg'
 
-  return (
-    <Center display="flex" flexWrap="wrap">
-      {property.map((property) => (
+function BoxTest() {
+   const [property, setProperty] = useState([]);
+   const [isLoading, setIsLoading] = useState(false);
+   const [error, setError] = useState(null);
+
+   const fetchHotelsHandler = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('https://react-http-36ed8-default-rtdb.europe-west1.firebasedatabase.app/hoteles.json');
+      if (!response.ok) {
+        throw new Error('Something went wrong!');
+        
+      }
+
+      const data = await response.json();
+
+      const loadedHotels = [];
+      for (const key in data) {
+        loadedHotels.push({
+          id: key,
+          baths: data[key].baths,
+          beds: data[key].beds,
+          imageUrl: data[key].imageUrl,
+          imageAlt: data[key].imageAlt,
+          title: data[key].title,
+          formattedPrice: data[key].formattedPrice,
+          reviewCount: data[key].reviewCount,
+          rating: data[key].rating,
+        })
+      }
+      //
+      setProperty(loadedHotels);
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  }, []);
+
+   useEffect(() => {
+    fetchHotelsHandler();
+  }, [fetchHotelsHandler]);
+
+
+  let content = <p>Found no hotels</p>;
+
+  if (property.length > 0) {
+    content = property.map((property) => (
       <Box
         w='20rem'
         h='24rem'
@@ -98,6 +60,7 @@ function BoxTest() {
         rounded="md"
         mr="5"
         mb="5"
+        key={property.id}
       >
         
         <Image src={property.imageUrl} alt={property.imageAlt} />
@@ -142,7 +105,20 @@ function BoxTest() {
         </Box>
         
       </Box>
-      ))}
+      ))
+  }
+
+  if (error) {
+    content = <p>{error}</p>;
+  }
+
+  if (isLoading) {
+    content = <img src={loadingIcon} alt="Loading" width="80" />;
+  }
+
+  return (
+    <Center display="flex" flexWrap="wrap">
+      {content}
     </Center>
   );
 }
