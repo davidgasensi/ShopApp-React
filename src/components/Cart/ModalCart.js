@@ -34,8 +34,6 @@ function ModalCart(props) {
   const [isErrorEmail, setIsErrorEmail] = useState(false);
   const dispatch = useDispatch();
   const toast = useToast();
-  // let isErrorName = useSelector((state) => state.ui.errorInputName);
-  // let isErrorEmail = useSelector((state) => state.ui.errorInputEmail);
 
   function addItemHandler(item) {
     dispatch(cartActions.addItemToCart(item));
@@ -68,6 +66,7 @@ function ModalCart(props) {
         position: "top",
       });
       dispatch(cartActions.removeAllCart());
+      onModalClose();
     }
   }
 
