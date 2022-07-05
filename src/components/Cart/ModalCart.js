@@ -82,8 +82,7 @@ function ModalCart(props) {
     }
   }
 
-
-  function onModalClose(){
+  function onModalClose() {
     props.onClose();
     setIsErrorName(false);
     setIsErrorEmail(false);
@@ -169,7 +168,9 @@ function ModalCart(props) {
               {totalPrice > 0 && (
                 <Box>
                   <FormControl isInvalid={isErrorName} isRequired>
-                    <FormLabel htmlFor="name">Name</FormLabel>
+                    <FormLabel htmlFor="name" mt="2">
+                      Name
+                    </FormLabel>
                     <Input
                       id="name"
                       type="name"
@@ -181,11 +182,15 @@ function ModalCart(props) {
                     )}
                   </FormControl>
                   <FormControl>
-                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormLabel htmlFor="email" mt="2">
+                      Email
+                    </FormLabel>
                     <Input id="email" type="email" />
                   </FormControl>
                   <FormControl isRequired isInvalid={isErrorEmail}>
-                    <FormLabel htmlFor="Address">Address</FormLabel>
+                    <FormLabel htmlFor="Address" mt="2">
+                      Address
+                    </FormLabel>
                     <Input
                       id="Address"
                       type="Address"
@@ -207,21 +212,25 @@ function ModalCart(props) {
             <ModalFooter>
               {!totalPrice <= 0 && (
                 <Flex>
-                  <Button
-                    leftIcon={<DeleteIcon />}
-                    colorScheme="red"
-                    onClick={removeAllCartHandler}
-                    mr="13rem"
-                  >
-                    Clear cart
-                  </Button>
-                  <Button
-                    colorScheme="teal"
-                    onClick={onSubmitHandler}
-                    disabled={isErrorName || isErrorEmail}
-                  >
-                    Send
-                  </Button>
+                  <Box>
+                    <Button
+                      leftIcon={<DeleteIcon />}
+                      colorScheme="red"
+                      onClick={removeAllCartHandler}
+                      mr="5rem"
+                    >
+                      Clear cart
+                    </Button>
+                  </Box>
+                  <Box>
+                    <Button
+                      colorScheme="teal"
+                      onClick={onSubmitHandler}
+                      disabled={isErrorName || isErrorEmail}
+                    >
+                      Send
+                    </Button>
+                  </Box>
                 </Flex>
               )}
             </ModalFooter>
