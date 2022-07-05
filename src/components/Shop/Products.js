@@ -1,6 +1,13 @@
-import { Box, Image, Flex, Heading, Icon, Center } from "@chakra-ui/react";
+import {
+  Center,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Select,
+} from "@chakra-ui/react";
+import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
 import ProductItems from "./ProducItems";
-
+import { useState } from "react";
 const DUMMY_PRODUCTS = [
   {
     id: "p1",
@@ -44,7 +51,7 @@ const DUMMY_PRODUCTS = [
     imageUrl:
       "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,b_rgb:f5f5f5/faac8563-420b-47ce-9018-a1733922f1ce/segunda-equipacion-stadium-fc-barcelona-2022-23-camiseta-de-futbol-dri-fit-Hz3Ll9.png",
     imageAlt: "BCN Shirt",
-    type: "shirt",
+    type: "shirts",
   },
   {
     id: "p10",
@@ -66,7 +73,7 @@ const DUMMY_PRODUCTS = [
     imageUrl:
       "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,b_rgb:f5f5f5/2655366c-e7b0-4d03-b2a1-6a8f618be6d2/primera-equipacion-stadium-paris-saint-germain-2022-23-camiseta-de-futbol-dri-fit-T2dRkh.png",
     imageAlt: "PSG Shirt",
-    type: "shirt",
+    type: "shirts",
   },
   {
     id: "p9",
@@ -116,22 +123,108 @@ const DUMMY_PRODUCTS = [
 ];
 
 function Products() {
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  const filterProductsByName = (event) => {
+    const { value } = event.target;
+    const filtered = DUMMY_PRODUCTS.filter((product) => {
+      return product.title.toLowerCase().includes(value.toLowerCase());
+    });
+    setFilteredProducts(filtered);
+  };
+
+  const filterProductsByType = (event) => {
+    if (event === undefined) {
+      setFilteredProducts(DUMMY_PRODUCTS);
+    } else {
+      const { value } = event.target;
+      const filtered = DUMMY_PRODUCTS.filter((product) => {
+        return product.type.toLowerCase().includes(value.toLowerCase());
+      });
+      setFilteredProducts(filtered);
+    }
+  };
+
+  function resetSearch() {
+    const dropDown = document.getElementById("selectSearch");
+    const inputSearch = document.getElementById("inputSearch");
+    inputSearch.value = "";
+    dropDown.selectedIndex = 0;
+    filterProductsByType();
+  }
+
+  let content = "";
+  if (filteredProducts.length > 1) {
+    content = (
+      <Center mt="10" display="flex" flexWrap="wrap">
+        {filteredProducts.map((product) => (
+          <ProductItems
+            key={product.id}
+            id={product.id}
+            title={product.title}
+            price={product.price}
+            reviewCount={product.reviewCount}
+            rating={product.rating}
+            imageUrl={product.imageUrl}
+            imageAlt={product.imageAlt}
+            type={product.type}
+          />
+        ))}
+      </Center>
+    );
+  } else {
+    content = (
+      <Center mt="10" display="flex" flexWrap="wrap">
+        {DUMMY_PRODUCTS.map((product) => (
+          <ProductItems
+            key={product.id}
+            id={product.id}
+            title={product.title}
+            price={product.price}
+            reviewCount={product.reviewCount}
+            rating={product.rating}
+            imageUrl={product.imageUrl}
+            imageAlt={product.imageAlt}
+            type={product.type}
+          />
+        ))}
+      </Center>
+    );
+  }
   return (
-    <Center mt="10" display="flex" flexWrap="wrap">
-      {DUMMY_PRODUCTS.map((product) => (
-        <ProductItems
-          key={product.id}
-          id={product.id}
-          title={product.title}
-          price={product.price}
-          reviewCount={product.reviewCount}
-          rating={product.rating}
-          imageUrl={product.imageUrl}
-          imageAlt={product.imageAlt}
-          type={product.type}
-        />
-      ))}
-    </Center>
+    <div>
+      <Center>
+        <InputGroup width="40rem" mt="10">
+          <InputLeftElement children={<SearchIcon color="brand.primary" />} />
+          <Input
+            placeholder="Search products by name"
+            size="md"
+            variant="outline"
+            onChange={filterProductsByName}
+            id="inputSearch"
+          />
+          <Select
+            placeholder="Select type"
+            ml="5"
+            width="15rem"
+            onChange={filterProductsByType}
+            id="selectSearch"
+          >
+            <option value="shoes">Shoes</option>
+            <option value="shirts">Shirts</option>
+            <option value="socks">Socks</option>
+          </Select>
+          <CloseIcon
+            color="red"
+            ml="3"
+            alignSelf="center"
+            cursor="pointer"
+            onClick={resetSearch}
+          />
+        </InputGroup>
+      </Center>
+      {content}
+    </div>
   );
 }
 

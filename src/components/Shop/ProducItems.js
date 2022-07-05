@@ -1,8 +1,24 @@
-import { Box, Image, Badge, Center, Button } from "@chakra-ui/react";
+import { Box, Image, Badge, Center, Button, useToast } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
-import { React, useState, useEffect, useCallback } from "react";
+import { React } from "react";
+import { useDispatch } from "react-redux";
 import { AiOutlineShopping } from "react-icons/ai";
+import { cartActions } from "../../store/cart-slice";
 function ProductItems(props) {
+  const dispatch = useDispatch();
+  const { title, price, id } = props;
+  const toast = useToast();
+  function addToCartHandler() {
+    dispatch(
+      cartActions.addItemToCart({
+        id,
+        title,
+        price,
+        imageUrl: props.imageUrl,
+        imageAlt: props.imageAlt,
+      })
+    );
+  }
   return (
     <Center>
       <Box
@@ -43,7 +59,25 @@ function ProductItems(props) {
               {props.reviewCount} reviews
             </Box>
           </Box>
-          <Button rightIcon={<AiOutlineShopping />} bg="brand.accent" size="md" pos="absolute" bottom="6" w="17rem" color="wh">
+          <Button
+            rightIcon={<AiOutlineShopping />}
+            bg="brand.accent"
+            size="md"
+            pos="absolute"
+            bottom="6"
+            w="17rem"
+            color="wh"
+            onClick={() => {
+              addToCartHandler();
+              toast({
+                title: "Added to cart",
+                status: "success",
+                duration: 700,
+                isClosable: true,
+                
+              });
+            }}
+          >
             Add to cart
           </Button>
         </Box>

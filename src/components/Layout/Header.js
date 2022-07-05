@@ -5,14 +5,17 @@ import {
   Heading,
   Icon,
   useDisclosure,
+
 } from "@chakra-ui/react";
 import ReactIcon from "../../assets/react-icon.svg";
 import { AiOutlineShopping } from "react-icons/ai";
 import ModalCart from "../Cart/ModalCart";
 import React from "react";
-
+import { useSelector } from "react-redux";
 function Header() {
   const { isOpen, onToggle, onClose } = useDisclosure();
+  const cartQuantity = useSelector(state => state.cart.totalQuantity);
+
 
   return (
     <React.Fragment>
@@ -33,15 +36,15 @@ function Header() {
         <Flex mr="2" as="h1" size="ms" color="white" align="center">
           <Icon
             as={AiOutlineShopping}
-            mr="1"
             boxSize="3rem"
             cursor="pointer"
             onClick={onToggle}
             color="brand.secondary"
           />
+          <Box mt="3" width="2rem" textAlign="center" bgColor="brand.secondary" color="black" rounded="lg" fontWeight="semibold">{cartQuantity}</Box>
         </Flex>
       </Flex>
-      <ModalCart isOpen={isOpen} onClose={onClose} />
+      <ModalCart isOpen={isOpen} onClose={onClose}/>
     </React.Fragment>
   );
 }
