@@ -210,7 +210,7 @@ function ModalCart(props) {
             </ModalBody>
 
             <ModalFooter>
-              {!totalPrice <= 0 && (
+              {totalPrice > 0 && (
                 <Flex>
                   <Box>
                     <Button
